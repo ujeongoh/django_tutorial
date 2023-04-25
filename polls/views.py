@@ -14,3 +14,11 @@ def index(request):
     }
     
     return render(request, 'polls/index.html', context)
+
+def detail(request, question_id):
+    question = Question.objects.get(pk=question_id)
+    context = {
+        'question': question
+    }
+    #return HttpResponse(f'입력받은 질문id입니다 : {question_id}')
+    return render(request, 'polls/detail.html', context)
