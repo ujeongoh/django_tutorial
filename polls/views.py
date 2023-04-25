@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import F
 from .models import *
 
 # Create your views here.
@@ -38,9 +39,17 @@ def vote(request, question_id):
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice']) # choice 라는 name을 가진 tag의 value(choice_id)를 가져온다.
     except (KeyError, Choice.DoesNotExist):
-        return render(request, 'polls/detail.html', {'question': question, 'error_message': '선택이 없습니다.'})
+        return render(request, 'polls/detail.html', {'question': question, 'error_message': f"선택이 없습니다. ID={request.POST['choice']}"})
     else:
-        selected_choice.votes += 1
+        # 서버에서 연산을 하게 되면 사용자들이 동시에 투표했을 때 정확한 카운트를 하지 못할 수 있음
+        # selected_choice.votes += 1
+
+        # F 모듈을 활용하기 - F의 인자로 주어지는 컬럼 값에 대한 처리를 하게 해준다.
+        selected_choice.votes = F('votes') + 1
         selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:index'))
+        return HttpResponseRedirect(reverse('polls:result', args=(question_id,)))
     
+
+def result(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/result.html', {'question': question})
