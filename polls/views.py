@@ -35,8 +35,12 @@ def detail(request, question_id):
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    selected_choice = question.choice_set.get(pk=request.POST['choice']) # choice 라는 name을 가진 tag의 value(choice_id)를 가져온다.
-    selected_choice.votes += 1
-    selected_choice.save()
-    return HttpResponseRedirect(reverse('polls:index'))
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice']) # choice 라는 name을 가진 tag의 value(choice_id)를 가져온다.
+    except (KeyError, Choice.DoesNotExist):
+        return render(request, 'polls/detail.html', {'question': question, 'error_message': '선택이 없습니다.'})
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        return HttpResponseRedirect(reverse('polls:index'))
     
