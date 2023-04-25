@@ -3,7 +3,10 @@
 <ul>
     <!--html에서 순환문 사용하기-->
     {% for question in questions %}
-        <li>{{question}}</li>
+        {% comment %} context 변수 사용 {% endcomment %}
+        {% comment %} <li><a href="/polls/{{question.id}}">{{question.question_text}}</a></li> {% endcomment %}
+        {% comment %} url파일에 설정해 준 name 사용 {% endcomment %}
+        <li><a href="{% url 'detail' question.id %}">{{question.question_text}}</a></li>
     {% endfor %}
 </ul>
 {% else %}
