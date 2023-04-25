@@ -47,7 +47,7 @@ def vote(request, question_id):
         # F 모듈을 활용하기 - F의 인자로 주어지는 컬럼 값에 대한 처리를 하게 해준다.
         selected_choice.votes = F('votes') + 1
         selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:result', args=(question_id,)))
+        return HttpResponseRedirect(reverse('polls:result', args=(question_id,))) # 인자를 받아야하는 url경로이기 떄문에 arg파라미터로 인자를 넘겨줌
     
 
 def result(request, question_id):
