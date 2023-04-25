@@ -9,6 +9,7 @@ def index(request):
     #return HttpResponse(output)
     context = {
         # template에서 'first_question'으로 해당 값에 접근할 수 있다.
+        'questions': latest_question_list,
         'first_question': latest_question_list[0]
     }
     

@@ -1,3 +1,6 @@
+<!--html에서 순환문 사용하기-->
 <ul>
-    <li>{{first_question}}</li>
+    {% for question in questions %}
+        <li>{{question}}</li>
+    {% endfor %}
 </ul>
