@@ -1,6 +1,10 @@
-<!--html에서 순환문 사용하기-->
+{% if questions %}
 <ul>
+    <!--html에서 순환문 사용하기-->
     {% for question in questions %}
         <li>{{question}}</li>
     {% endfor %}
 </ul>
+{% else %}
+<p> no questions </p>
+{% endif %}
