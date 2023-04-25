@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.urls import reverse
 from .models import *
 
 # Create your views here.
@@ -31,3 +32,11 @@ def detail(request, question_id):
     }
     
     return render(request, 'polls/detail.html', context)
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    selected_choice = question.choice_set.get(pk=request.POST['choice']) # choice 라는 name을 가진 tag의 value(choice_id)를 가져온다.
+    selected_choice.votes += 1
+    selected_choice.save()
+    return HttpResponseRedirect(reverse('polls:index'))
+    
