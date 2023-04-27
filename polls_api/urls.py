@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import *
 
 # @api_view 데코레이터 사용
@@ -14,4 +14,5 @@ urlpatterns = [
     path('users/', UserList.as_view(), name='user-list'),
     path('users/<int:pk>', UserDetail.as_view(), name='user-detail'),
     path('register', RegisterUser.as_view()),
+    path('api-auth/', include('rest_framework.urls')) # rest_framework가 제공하는 로그인 기능을 사용하기 위함
 ]

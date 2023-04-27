@@ -9,8 +9,13 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
+from django.urls import reverse_lazy
 from pathlib import Path
+
+# 로그인/로그아웃 시 리다이렉트되는 url설정 (reverse_lazy를 통해 url name으로 가져움)
+LOGIN_REDIRECT_URL = reverse_lazy('question-list')
+LOGOUT_REDIRECT_URL = reverse_lazy('question-list')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
