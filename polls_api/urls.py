@@ -10,5 +10,7 @@ from .views import *
 # API_View 클래스 상속한 클래스 사용
 urlpatterns = [
     path('question/', QuestionList.as_view(), name='question-list'),
-    path('question/<int:id>/', QuestionDetail.as_view(), name='question-detail'),
+    path('question/<int:pk>/', QuestionDetail.as_view(), name='question-detail'),
+    path('users/', UserList.as_view(), name='user-list'),
+    path('users/<int:pk>', UserDetail.as_view(), name='user-detail'),
 ]
