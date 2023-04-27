@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    # 읽기전용으로 만들기 위해 따로 만들어준다.
+    # 새로운 질문이 생성될 때 owner 필드에 현재 요청을 보낸 사용자를 자동으로 할당
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Question # Meta 클래스 내부의 model 속성을 통해 Serialize할 대상 모델을 지정할 수 있습니다.

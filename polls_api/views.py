@@ -13,7 +13,9 @@ class QuestionList(generics.ListCreateAPIView):
 
     # perform_create를 오버라이드하여 데이터를 생성 시 owner가 현재 접속하고 있는 user로 설정되도록 한다.
     def perform_create(self, serializer):
+        # owner 필드가 읽기 전용인데도 값을 지정하여 적용할 수 있는 이유는 save함수가 주어진 값을 그대로 저장하기 때문이다.
         serializer.save(owner=self.request.user)
+    # def post() 가 ListCreateAPIView에 구현되어 있고, 이를 상속받았으므로 여기서도 사용가능하다
 
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
