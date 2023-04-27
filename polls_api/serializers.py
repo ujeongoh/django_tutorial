@@ -5,9 +5,11 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class QuestionSerializer(serializers.ModelSerializer):
+    # 읽기전용으로 만들기 위해 따로 만들어준다.
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Question # Meta 클래스 내부의 model 속성을 통해 Serialize할 대상 모델을 지정할 수 있습니다.
-        fields = ['id', 'question_text', 'pub_date'] # Meta 클래스 내부의 fields 속성을 통해 Serialize할 대상 필드들을 리스트 형태로 나열하여 지정할 수 있습니다.
+        fields = ['id', 'question_text', 'pub_date', 'owner'] # Meta 클래스 내부의 fields 속성을 통해 Serialize할 대상 필드들을 리스트 형태로 나열하여 지정할 수 있습니다.
 
 class UserSerializer(serializers.ModelSerializer):
     # User 의 id를 통해서 불러들일 수 있는 question들을 명시한다.
