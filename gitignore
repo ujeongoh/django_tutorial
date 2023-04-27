@@ -64,12 +64,13 @@ env/
 venv
 venv.bak/
 venv/
+venv/*
 
 # Misc
 .mypy_cache
 /staticfiles
 
-# IDEs
+# ID
 .DS_Store
 .idea
 .vscode
