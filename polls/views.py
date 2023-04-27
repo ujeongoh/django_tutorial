@@ -3,6 +3,8 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import F
 from .models import *
+from django.views import generic
+from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 def index(request):
@@ -53,3 +55,9 @@ def vote(request, question_id):
 def result(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/result.html', {'question': question})
+
+class SignupView(generic.CreateView):
+    form_class = UserCreationForm
+    # 사용자 생성 성공 후에는 user리스트 화면으로 이동시킨다
+    success_url = reverse_lazy('user-list') # url.py에 정의했던 name을 기반으로 url을 만들어준다
+    template_name = 'registration/signup.html'
