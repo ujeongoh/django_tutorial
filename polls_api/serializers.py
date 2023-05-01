@@ -1,15 +1,25 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from polls.models import Question, Choice, Vote  # serialize 할 모델 가져오기
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
 
 class VoteSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if attrs['choice'].question.id != attrs['question'].id:
+            raise serializers.ValidationError("Question과 Choice가 조합이 맞지 않습니다.")
     voter = serializers.ReadOnlyField(source='voter.username')
 
     class Meta:
         model = Vote
         fields = ['id', 'question', 'choice', 'voter']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Vote.objects.all(),
+                fields=['question', 'voter']
+            )
+        ]
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -70,3 +80,21 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password', 'password2']
         extra_kwargs = {'password': {'write_only': True}}
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if attrs['choice'].question.id != attrs['question'].id:
+            raise serializers.ValidationError("Question과 Choice가 조합이 맞지 않습니다.")
+
+        return attrs
+
+    class Meta:
+        model = Vote
+        fields = ['id', 'question', 'choice', 'voter']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Vote.objects.all(),
+                fields=['question', 'voter']
+            )
+        ]
