@@ -2,6 +2,52 @@ from django.test import TestCase
 from polls_api.serializers import QuestionSerializer, VoteSerializer
 from django.contrib.auth.models import User
 from polls.models import Question, Choice, Vote
+from rest_framework.test import APITestCase
+from django.urls import reverse
+from rest_framework import status
+from django.utils import timezone
+
+
+class QuestionListTest(APITestCase):
+    def setUp(self):
+        self.question_data = {'question_text': 'some question'}
+        # url을 만들어준다. reverse_lazy 와 같은 동작을 한다.
+        self.url = reverse('question-list')
+
+    # 질문 생성기능 확인
+    def test_create_question(self):
+        # 먼저 User를 생성한다.
+        user = User.objects.create(username='testuser', password='testpass')
+        # APITestCase 를 상속받았기 때문에 강제로 로그인시키는 force_authenticate기능을 사용할 수 있다.
+        self.client.force_authenticate(user=user)
+        # 질문이 잘 생성되었는지 확인
+        response = self.client.post(self.url, self.question_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Question.objects.count(), 1)
+
+        # 내용이 잘 저장되었는지 확인
+        question = Question.objects.first()
+        self.assertEqual(question.question_text,
+                         self.question_data['question_text'])
+        self.assertLess(
+            (timezone.now() - question.pub_date).total_seconds(), 1)
+
+    # 사용자가 로그인 되어있지 않을 때 질문생성되지 않는 것을 확인
+    def test_create_question_without_authentication(self):
+        response = self.client.post(self.url, self.question_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # 질문리스트 조회 확인
+    def test_list_question(self):
+        question = Question.objects.create(question_text='Question 1')
+        choice = Choice.objects.create(
+            question=question, choice_text='Question 1 - Choice 1')
+        Question.objects.create(question_text='Question 2')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.data[0]['choices']
+                         [0]['choice_text'], choice.choice_text)
 
 
 class VoteSerializerTest(TestCase):
