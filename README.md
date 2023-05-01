@@ -28,3 +28,6 @@ python 가상환경 세팅부터 django 설치, 프로젝트 생성, 간단한 C
 ## 🔗 Links
 * https://velog.io/@ujeongoh/20230424-TIL-django-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC
 * https://velog.io/@ujeongoh/20230425-TIL-django-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC-2
+* https://velog.io/@ujeongoh/20230426-TIL-django-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC-3
+* https://velog.io/@ujeongoh/20230426-TIL-django-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC-3-5xoy5tdv
+* https://velog.io/@ujeongoh/20230427-TIL-django-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC-5
