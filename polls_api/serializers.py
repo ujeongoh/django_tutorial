@@ -1,13 +1,26 @@
 from rest_framework import serializers
-from polls.models import *  # serialize 할 모델 가져오기
+from polls.models import Question, Choice, Vote  # serialize 할 모델 가져오기
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
 
+class VoteSerializer(serializers.ModelSerializer):
+    voter = serializers.ReadOnlyField(source='voter.username')
+
+    class Meta:
+        model = Vote
+        fields = ['id', 'question', 'choice', 'voter']
+
+
 class ChoiceSerializer(serializers.ModelSerializer):
+    votes_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Choice
-        fields = ['choice_text', 'votes']
+        fields = ['choice_text', 'votes_count']
+
+    def get_votes_count(self, obj):
+        return obj.vote_set.count()
 
 
 class QuestionSerializer(serializers.ModelSerializer):

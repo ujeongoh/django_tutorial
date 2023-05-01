@@ -16,4 +16,6 @@ urlpatterns = [
     path('register/', RegisterUser.as_view()),
     # rest_framework가 제공하는 로그인 기능을 사용하기 위함
     path('api-auth/', include('rest_framework.urls')),
+    path('vote/', VoteList.as_view()),
+    path('vote/<int:pk>/', VoteDetail.as_view()),
 ]

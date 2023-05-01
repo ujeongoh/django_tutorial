@@ -1,8 +1,26 @@
-from polls.models import Question
+from polls.models import Question, Choice, Vote
 from polls_api.serializers import *
 from rest_framework import generics, permissions
 from django.contrib.auth.models import User
-from .permissions import IsOwnerOrReadOnly
+from .permissions import *
+
+
+class VoteList(generics.ListCreateAPIView):
+    serializer_class = VoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        return Vote.objects.filter(voter=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(voter=self.request.user)
+
+
+class VoteDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Vote.objects.all()
+    serializer_class = VoteSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, IsVoterOrReadOnly]
 
 
 class QuestionList(generics.ListCreateAPIView):
@@ -17,19 +35,25 @@ class QuestionList(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
     # def post() 가 ListCreateAPIView에 구현되어 있고, 이를 상속받았으므로 여기서도 사용가능하다
 
+
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     # 상세화면에서도 login 하지 않았으면 질문 생성 못함. 또한 login했을 경우에도 본인이 작성한 것이 아니라면 수정하지 못하도록 해야함 --> 제공되는 permission class가 아니라 따로 permissions.py를 만들어주어야 한다.
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 class RegisterUser(generics.CreateAPIView):
     serializer_class = RegisterSerializer
